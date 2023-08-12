@@ -1,5 +1,5 @@
-from components.color import *
-from components.point import *
+from src.components.color import *
+from src.components.point import *
 
 
 class Light:

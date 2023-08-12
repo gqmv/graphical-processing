@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from components.vector import Vector
+from src.components.vector import Vector
 
 
 class Point:
@@ -20,7 +20,6 @@ class Point:
         return f"Point({self.x}, {self.y}, {self.z})"
 
     def __sub__(self, other: Point) -> Vector:
-        from components.vector import Vector
         return Vector(self.x - other.x, self.y - other.y, self.z - other.z)
 
     def __add__(self, other: Point | Vector) -> Point:

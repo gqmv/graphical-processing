@@ -3,7 +3,7 @@ from __future__ import annotations
 import math
 from abc import abstractmethod
 
-import components
+import src.components
 
 
 class Transformable:
@@ -35,7 +35,7 @@ class Transformable:
 
         return self
 
-    def translate(self, vector: components.vector.Vector) -> Transformable:
+    def translate(self, vector: src.components.vector.Vector) -> Transformable:
         """Returns the object translated by the given vector."""
         return self.transform(
             [
@@ -46,7 +46,7 @@ class Transformable:
             ]
         )
 
-    def scale(self, vector: components.vector.Vector) -> Transformable:
+    def scale(self, vector: src.components.vector.Vector) -> Transformable:
         """Returns the object scaled by the given vector."""
         return self.transform(
             [
@@ -58,7 +58,7 @@ class Transformable:
         )
 
     def reflect(
-        self, point: components.point.Point, normal: components.vector.Vector
+        self, point: src.components.point.Point, normal: src.components.vector.Vector
     ) -> Transformable:
         """Returns the object reflected by the given point and normal vector."""
         return self.transform(
@@ -87,8 +87,8 @@ class Transformable:
 
     def rotate(
         self,
-        point: components.point.Point,
-        vector: components.vector.Vector,
+        point: src.components.point.Point,
+        vector: src.components.vector.Vector,
         angle_radians: float | None = None,
         angle_degrees: float | None = None,
     ) -> Transformable:

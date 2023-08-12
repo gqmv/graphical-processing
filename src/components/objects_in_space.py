@@ -1,10 +1,10 @@
 import math
 from abc import ABC, abstractmethod
 
-from components.material import Material
-from components.point import Point
-from components.ray import Ray
-from components.vector import Vector
+from src.components.material import Material
+from src.components.point import Point
+from src.components.ray import Ray
+from src.components.vector import Vector
 
 
 class AbstractObject(ABC):

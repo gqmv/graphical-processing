@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
-from components.camera import Camera
-from components.color import Color
-from components.light import Light
-from components.objects_in_space import AbstractObject
+from src.components.camera import Camera
+from src.components.color import Color
+from src.components.light import Light
+from src.components.objects_in_space import AbstractObject
 
 
 @dataclass

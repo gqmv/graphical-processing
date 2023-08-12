@@ -3,8 +3,8 @@ from __future__ import annotations
 import math
 from typing import Any, TypeVar, Union
 
-import components
-from components.transformations import Transformable
+import src.components
+from src.components.transformations import Transformable
 
 
 class Vector(Transformable):
@@ -27,7 +27,7 @@ class Vector(Transformable):
 
         return self.x == other.x and self.y == other.y and self.z == other.z
 
-    T = TypeVar("T", "Vector", "components.point.Point")
+    T = TypeVar("T", "Vector", "src.components.point.Point")
 
     def __add__(self, other: T) -> T:
         if not isinstance(other, Vector):

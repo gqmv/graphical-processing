@@ -1,4 +1,4 @@
-from components.color import Color
+from src.components.color import Color
 
 
 class Material:

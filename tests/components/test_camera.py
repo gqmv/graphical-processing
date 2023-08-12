@@ -1,6 +1,6 @@
 from src.components.camera import *
-from src.components.vector import *
 from src.components.point import *
+from src.components.vector import *
 
 
 def is_orthogonal(v1: Vector, v2: Vector, v3: Vector) -> bool:

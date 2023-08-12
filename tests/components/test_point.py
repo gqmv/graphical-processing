@@ -1,5 +1,6 @@
 from src.components.point import *
 
+
 class TestPoint:
     def test_init(self):
         point = Point(1, 2, 3)

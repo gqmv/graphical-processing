@@ -1,4 +1,4 @@
-from components.vector import *
+from src.components.vector import *
 
 
 class Color(Vector):

@@ -1,6 +1,8 @@
-from src.components.vector import *
 import math
+
 import pytest
+
+from src.components.vector import *
 
 
 class TestVector:

@@ -1,6 +1,6 @@
-from components.point import *
-from components.ray import Ray
-from components.vector import *
+from src.components.point import *
+from src.components.ray import Ray
+from src.components.vector import *
 
 
 class Camera:

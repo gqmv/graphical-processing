@@ -1,5 +1,5 @@
-from components.point import Point
-from components.vector import Vector
+from src.components.point import Point
+from src.components.vector import Vector
 
 
 class Ray:
