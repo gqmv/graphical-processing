@@ -1,13 +1,12 @@
+from dataclasses import dataclass
+
 from src.components.color import *
 from src.components.point import *
 
 
+@dataclass
 class Light:
     """A light source in the scene."""
 
-    def __init__(self, position: Point, color: Color):
-        self.position = position
-        self.color = color
-
-    def __repr__(self):
-        return f"Light(Pos:{self.position.__repr__}, Color:{self.color.__repr__})"
+    position: Point
+    color: Color

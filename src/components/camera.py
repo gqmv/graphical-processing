@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from src.components.point import *
 from src.components.ray import Ray
 from src.components.vector import *
@@ -51,16 +53,26 @@ class Camera:
         direction = point - self.position
         return Ray(self.position, direction)
 
-    @property
-    def phong(self):
-        # TODO: Unfinished method. Do not rely
-        raise NotImplementedError
-        Ia = 1
-        Ka = 1
-        Ia = 0.2
-        Ka = 0.5
-        Ks = 0.4
-        N = 0.2
-        vetor_r = 2 * ()
-        I = (Ia * Ka) + (Ks * ())
-        pass
+    class CameraRayIterator:
+        """Iterator for Camera Rays"""
+
+        def __init__(self, camera: Camera):
+            self.camera = camera
+            self.i = 0
+            self.j = 0
+
+        def __iter__(self):
+            return self
+
+        def __next__(self):
+            if self.i == self.camera.horizontal_resolution:
+                raise StopIteration
+            ray = self.camera.get_ray(self.i, self.j)
+            self.j += 1
+            if self.j == self.camera.vertical_resolution:
+                self.j = 0
+                self.i += 1
+            return ray
+
+    def get_rays(self):
+        return Camera.CameraRayIterator(self)

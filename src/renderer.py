@@ -1,13 +1,13 @@
-from components.camera import Camera
-from components.color import Color
-from components.image import Image
-from components.light import Light
-from components.material import Material
-from components.objects_in_space import AbstractObject
-from components.point import Point
-from components.ray import Ray
-from components.scene import Scene
-from components.vector import Vector
+from src.components.camera import Camera
+from src.components.color import Color
+from src.components.image import Image
+from src.components.light import Light
+from src.components.material import Material
+from src.components.objects_in_space import Object
+from src.components.point import Point
+from src.components.ray import Ray
+from src.components.scene import Scene
+from src.components.vector import Vector
 
 
 def trace_ray(ray: Ray, scene: Scene) -> Color:

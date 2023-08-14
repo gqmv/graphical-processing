@@ -7,7 +7,7 @@ from src.components.ray import Ray
 from src.components.vector import Vector
 
 
-class AbstractObject(ABC):
+class Object(ABC):
     """Abstract class for all objects in space."""
 
     def __init__(self, material: Material):
@@ -28,7 +28,7 @@ class AbstractObject(ABC):
         pass
 
 
-class Sphere(AbstractObject):
+class Sphere(Object):
     """Class for sphere objects."""
 
     def __init__(self, material: Material, radius: float, center: Point):
@@ -71,7 +71,7 @@ class Sphere(AbstractObject):
         )
 
 
-class Plane(AbstractObject):
+class Plane(Object):
     """Class for plane objects."""
 
     def __init__(self, material: Material, normal: Vector, point: Point):
@@ -80,7 +80,7 @@ class Plane(AbstractObject):
         self.point = point
 
 
-class Triangle(AbstractObject):
+class Triangle(Object):
     """Class for triangle objects."""
 
     def __init__(
@@ -96,7 +96,7 @@ class Triangle(AbstractObject):
         self.points_normal = points_normal
 
 
-class TriangleMesh(AbstractObject):
+class TriangleMesh(Object):
     """Class for triangle mesh objects."""
 
     def __init__(self, material: Material, triangles: list[Triangle]):

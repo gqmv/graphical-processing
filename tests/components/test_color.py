@@ -13,3 +13,7 @@ class TestColor:
         assert color.r == 1.0
         assert color.g == 1.0
         assert color.b == 1.0
+
+    def test_as_rgb(self):
+        color = Color.from_hex("#ffffff")
+        assert color.as_rgb() == (255, 255, 255)

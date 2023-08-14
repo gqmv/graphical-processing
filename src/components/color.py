@@ -23,6 +23,11 @@ class Color(Vector):
     def __repr__(self) -> str:
         return f"Color({self.r}, {self.g}, {self.b})"
 
+    def __init__(self, x: float, y: float, z: float):
+        super().__init__(x, y, z)
+        if x > 1 or y > 1 or z > 1:
+            raise ValueError("Color values must be between 0 and 1")
+
     @classmethod
     def from_hex(cls, hex: str):
         """Takes a hex string and returns a color object"""

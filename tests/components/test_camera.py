@@ -40,3 +40,26 @@ class TestCamera:
         cam_2 = Camera(location, look_at, v_up, 90, 1, 1)
 
         assert is_orthogonal(cam_2.v_w, cam_2.v_u, cam_2.v_v)
+
+    def test_camera_get_ray(self):
+        location = Point(0, 0, 0)
+        look_at = Point(0, 0, 1)
+        v_up = Vector(0, 1, 0)
+
+        cam = Camera(location, look_at, v_up, 90, 2, 2)
+
+        ray = cam.get_ray(1, 1)
+
+        assert ray.origin == location
+        assert ray.direction == Vector(0, 0, 90).normalized()
+
+    def test_camera_iter(self):
+        location = Point(0, 0, 0)
+        look_at = Point(0, 0, 1)
+        v_up = Vector(0, 1, 0)
+
+        cam = Camera(location, look_at, v_up, 90, 2, 2)
+
+        rays = [ray for ray in cam.get_rays()]
+        assert len(rays) == 4
+        assert Vector(0, 0, 90).normalized() in [ray.direction for ray in rays]

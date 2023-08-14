@@ -7,7 +7,7 @@ class Ray:
 
     def __init__(self, origin: Point, direction: Vector):
         self.origin = origin
-        self.direction = direction
+        self.direction = direction.normalized()
 
     def __repr__(self) -> str:
         return f"Ray(Origin:{self.origin}, Direction:{self.direction})"
