@@ -1,15 +1,12 @@
-from src.components.camera import Camera
+from multiprocessing import Pool
+
 from src.components.color import Color
 from src.components.image import Image
-from src.components.light import Light
-from src.components.material import Material
 from src.components.objects_in_space import Object
 from src.components.point import Point
 from src.components.ray import Ray
 from src.components.scene import Scene
 from src.components.vector import Vector
-
-from multiprocessing import Pool, Lock, Manager
 
 
 def find_nearest_intersection(

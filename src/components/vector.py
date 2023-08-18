@@ -6,7 +6,6 @@ from typing import Any, Self, Type, TypeVar, Union
 import src.components
 from src.components.transformations import Transformable
 
-
 U = TypeVar("U")
 
 

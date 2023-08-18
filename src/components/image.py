@@ -34,7 +34,7 @@ class Image:
         """Set the color of a pixel."""
         self._pixels[y][x] = color
 
-    def write_ppm(self, filename: str) -> None:
+    def write_ppm(self, filename: str | Path) -> None:
         """Write the image to a PPM file located at the given path."""
         with open(filename, "w") as f:
             f.write(f"P3 {self.horizontal_resolution} {self.vertical_resolution} 255\n")

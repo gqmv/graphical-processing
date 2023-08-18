@@ -1,10 +1,10 @@
 from __future__ import annotations
 
+from functools import lru_cache
+
 from src.components.point import *
 from src.components.ray import Ray
 from src.components.vector import *
-
-from functools import lru_cache
 
 
 @lru_cache

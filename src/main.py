@@ -1,114 +1,24 @@
-from src.components.camera import Camera
-from src.components.color import Color
-from src.components.light import Light
-from src.components.material import Material
-from src.components.objects_in_space import *
-from src.components.point import Point
-from src.components.ray import Ray
-from src.components.scene import Scene
-from src.components.vector import Vector
-from src.renderer import render_scene
+from argparse import ArgumentParser
+from pathlib import Path
 
-from jsonpickle import encode, decode
-import cProfile
-import pstats
+import jsonpickle
+
+from src.renderer import render_scene
 
 
 def main():
-    objects = []
+    ap = ArgumentParser()
 
-    obj1_mat = Material(
-        color=Color(255, 0, 0).normalized(),
-        diffusion_coefficient=1,
-        specular_coefficient=1,
-        ambient_coefficient=1,
-        reflection_coefficient=0,
-        transmission_coefficient=0,
-        rugosity_coefficient=500,
-    )
+    ap.add_argument("scene", help="The scene file", type=Path)
+    ap.add_argument("destination", help="The destination of the image file", type=Path)
 
-    obj1 = Sphere(
-        center=Point(3, -1, 0),
-        radius=1,
-        material=obj1_mat,
-    )
+    args = ap.parse_args()
 
-    obj2_mat = Material(
-        color=Color(0, 0, 255).normalized(),
-        diffusion_coefficient=1,
-        specular_coefficient=1,
-        ambient_coefficient=1,
-        reflection_coefficient=0,
-        transmission_coefficient=0,
-        rugosity_coefficient=500,
-    )
-
-    obj2 = Sphere(
-        center=Point(4, 0, 2),
-        radius=1,
-        material=obj2_mat,
-    )
-
-    obj3_mat = Material(
-        color=Color(0, 255, 0).normalized(),
-        diffusion_coefficient=1,
-        specular_coefficient=1,
-        ambient_coefficient=1,
-        reflection_coefficient=0,
-        transmission_coefficient=0,
-        rugosity_coefficient=100,
-    )
-
-    obj3 = Sphere(
-        center=Point(4, 0, -2),
-        radius=1,
-        material=obj3_mat,
-    )
-
-    obj4_mat = Material(
-        color=Color(255, 255, 0).normalized(),
-        diffusion_coefficient=1,
-        specular_coefficient=1,
-        ambient_coefficient=1,
-        reflection_coefficient=0,
-        transmission_coefficient=0,
-        rugosity_coefficient=1000,
-    )
-
-    obj4 = Sphere(
-        center=Point(0, -5001, 0),
-        radius=5000,
-        material=obj4_mat,
-    )
-
-    objects.append(obj1)
-    objects.append(obj2)
-    objects.append(obj3)
-    objects.append(obj4)
-
-    camera = Camera(
-        position=Point(0, 0, 0),
-        look_at=Point(1, 0, 0),
-        v_up=Vector(0, 1, 0),
-        distance_from_screen=250,
-        vertical_resolution=500,
-        horizontal_resolution=500,
-    )
-
-    lights = [
-        Light(Point(0, 1, 2), Color(255, 255, 255) * 0.6),
-    ]
-
-    scene = Scene(
-        camera=camera,
-        objects=objects,
-        lights=lights,
-        ambient_color=Color(255, 255, 255) * 0.2,
-        background_color=Color(0, 0, 0),
-    )
+    with open(args.scene, "r") as f:
+        scene = jsonpickle.decode(f.read())
 
     img = render_scene(scene=scene, multithread=True)
-    img.write_ppm("notion.ppm")
+    img.write_ppm(args.destination.absolute())
 
 
 if __name__ == "__main__":

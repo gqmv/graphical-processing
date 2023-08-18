@@ -1,7 +1,7 @@
 from src.components.color import Color
 from src.components.light import Light
-from src.components.vector import Vector
 from src.components.point import Point
+from src.components.vector import Vector
 
 
 class Material:
