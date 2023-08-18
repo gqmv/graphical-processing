@@ -5,3 +5,4 @@ mypy
 pytest-cov
 isort
 coverage
+jsonpickle

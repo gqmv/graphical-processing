@@ -33,18 +33,20 @@ class Camera:
 
     @property
     def v_u(self) -> Vector:
-        return cross_product(self.v_up, self.v_w).normalized()
+        return self.v_up.cross_product(self.v_w).normalized()
 
     @property
     def v_v(self) -> Vector:
-        return cross_product(self.v_w, self.v_u)
+        return self.v_w.cross_product(self.v_u)
 
     def get_ray(self, i: int, j: int) -> Ray:
         """Returns a ray from the camera to the pixel (i, j)"""
+        j = self.vertical_resolution - j
+
         screen_center = (self.v_w * self.distance_from_screen) + self.position
 
-        relative_i = (i - self.horizontal_resolution / 2) / self.horizontal_resolution
-        relative_j = (j - self.vertical_resolution / 2) / self.vertical_resolution
+        relative_i = i - self.horizontal_resolution / 2
+        relative_j = j - self.vertical_resolution / 2
 
         i_offset_vector = self.v_u * relative_i
         j_offset_vector = self.v_v * relative_j

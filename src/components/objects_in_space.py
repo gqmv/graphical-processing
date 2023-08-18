@@ -14,7 +14,7 @@ class Object(ABC):
         self.material = material
 
     @abstractmethod
-    def find_intersection(self, ray: Ray) -> tuple[float, Vector] | None:
+    def find_intersection(self, ray: Ray) -> tuple[float, Vector] | tuple[None, None]:
         """Find the intersection of the object with a ray.
 
         Returns:
@@ -42,7 +42,7 @@ class Sphere(Object):
     def get_normal_at_point(self, point: Point) -> Vector:
         return (point - self.center).normalized()
 
-    def find_intersection(self, ray: Ray) -> tuple[float, Vector] | None:
+    def find_intersection(self, ray: Ray) -> tuple[float, Vector] | tuple[None, None]:
         a_coeff = ray.direction.dot_product(ray.direction)
         b_coeff = 2 * ray.direction.dot_product(ray.origin - self.center)
         c_coeff = (ray.origin - self.center).dot_product(
@@ -51,24 +51,20 @@ class Sphere(Object):
 
         discriminant = b_coeff**2 - 4 * a_coeff * c_coeff
 
-        if discriminant < 0:
-            return None
+        if discriminant >= 0:
+            distance = (-b_coeff - math.sqrt(discriminant)) / (2 * a_coeff)
+            if distance > 0.001:
+                return distance, self.get_normal_at_point(
+                    ray.origin + distance * ray.direction
+                )
 
-        t1 = (-b_coeff + math.sqrt(discriminant)) / (2 * a_coeff)
-        t2 = (-b_coeff - math.sqrt(discriminant)) / (2 * a_coeff)
+            distance = (-b_coeff + math.sqrt(discriminant)) / (2 * a_coeff)
+            if distance > 0.001:
+                return distance, self.get_normal_at_point(
+                    ray.origin + distance * ray.direction
+                )
 
-        if t1 < 0 and t2 < 0:
-            return None
-
-        if t1 < 0:
-            return t2, self.get_normal_at_point(ray.origin + t2 * ray.direction)
-
-        if t2 < 0:
-            return t1, self.get_normal_at_point(ray.origin + t1 * ray.direction)
-
-        return min(t1, t2), self.get_normal_at_point(
-            ray.origin + min(t1, t2) * ray.direction
-        )
+        return None, None
 
 
 class Plane(Object):
@@ -78,6 +74,21 @@ class Plane(Object):
         super().__init__(material)
         self.normal = normal.normalized()
         self.point = point
+
+    def get_normal_at_point(self, point: Point) -> Vector:
+        return self.normal
+
+    def find_intersection(self, ray: Ray) -> tuple[float, Vector] | tuple[None, None]:
+        if abs(ray.direction.dot_product(self.normal)) < 0.001:
+            return None, None
+
+        distance = self.normal.dot_product(
+            self.point - ray.origin
+        ) / ray.direction.dot_product(self.normal)
+        if distance > 0.001:
+            return distance, self.normal
+
+        return None, None
 
 
 class Triangle(Object):

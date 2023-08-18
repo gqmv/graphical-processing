@@ -14,3 +14,4 @@ class Scene:
     objects: list[Object]
     lights: list[Light]
     ambient_color: Color
+    background_color: Color

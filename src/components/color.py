@@ -18,15 +18,13 @@ class Color(Vector):
 
     def as_rgb(self) -> tuple[int, int, int]:
         """Returns the color as a tuple of ints"""
-        return (int(self.r * 255), int(self.g * 255), int(self.b * 255))
+        return (int(self.r), int(self.g), int(self.b))
 
     def __repr__(self) -> str:
         return f"Color({self.r}, {self.g}, {self.b})"
 
-    def __init__(self, x: float, y: float, z: float):
-        super().__init__(x, y, z)
-        if x > 1 or y > 1 or z > 1:
-            raise ValueError("Color values must be between 0 and 1")
+    def __init__(self, r: float, g: float, b: float):
+        super().__init__(min(r, 255), min(g, 255), min(b, 255))
 
     @classmethod
     def from_hex(cls, hex: str):
@@ -34,13 +32,13 @@ class Color(Vector):
         if hex.startswith("#"):
             hex = hex[1:]
 
-        x = int(hex[0:2], 16) / 255
-        y = int(hex[2:4], 16) / 255
-        z = int(hex[4:6], 16) / 255
+        x = int(hex[0:2], 16)
+        y = int(hex[2:4], 16)
+        z = int(hex[4:6], 16)
 
         return cls(x, y, z)
 
     @classmethod
     def from_rgb(cls, r: float, g: float, b: float):
         """Takes rgb values and returns a color object"""
-        return cls(r / 255, g / 255, b / 255)
+        return cls(r, g, b)

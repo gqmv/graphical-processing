@@ -19,7 +19,7 @@ class Point:
     def __repr__(self) -> str:
         return f"Point({self.x}, {self.y}, {self.z})"
 
-    def __sub__(self, other: Point) -> Vector:
+    def __sub__(self, other: Point | Vector) -> Vector:
         return Vector(self.x - other.x, self.y - other.y, self.z - other.z)
 
     def __add__(self, other: Point | Vector) -> Point:

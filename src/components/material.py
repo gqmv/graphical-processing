@@ -1,4 +1,7 @@
 from src.components.color import Color
+from src.components.light import Light
+from src.components.vector import Vector
+from src.components.point import Point
 
 
 class Material:
@@ -21,3 +24,39 @@ class Material:
         self.reflection_coefficient = reflection_coefficient
         self.transmission_coefficient = transmission_coefficient
         self.rugosity_coefficient = rugosity_coefficient
+
+    def get_ambient_component(self, scene_color: Color) -> Color:
+        """Returns the ambient component of the material according to phong's model."""
+        return self.ambient_coefficient * scene_color * self.color
+
+    def get_diffuse_component(
+        self, light: Light, normal_at_position: Vector, hit_position: Point
+    ) -> Color:
+        """Returns the diffuse component of the material according to phong's model."""
+        to_light = light.position - hit_position
+        return (
+            (light.color * self.color)
+            * self.diffusion_coefficient
+            * max((normal_at_position.dot_product(to_light)), 0)
+        )
+
+    def get_specular_component(
+        self,
+        light: Light,
+        normal_at_position: Vector,
+        hit_position: Point,
+        spectator_position: Point,
+    ) -> Color:
+        """Returns the specular component of the material according to phong's model."""
+        to_light = light.position - hit_position
+        reflection_vector = (
+            2 * (normal_at_position.dot_product(to_light)) * normal_at_position
+            - to_light
+        )
+        to_spectator = spectator_position - hit_position
+        return (
+            light.color
+            * self.specular_coefficient
+            * (max(reflection_vector.dot_product(to_spectator), 0))
+            ** self.rugosity_coefficient
+        )

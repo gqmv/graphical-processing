@@ -4,9 +4,9 @@ from src.components.vector import *
 
 
 def is_orthogonal(v1: Vector, v2: Vector, v3: Vector) -> bool:
-    dp1 = round(dot_product(v1, v2), 10)
-    dp2 = round(dot_product(v1, v3), 10)
-    dp3 = round(dot_product(v2, v3), 10)
+    dp1 = round(v1.dot_product(v2), 10)
+    dp2 = round(v2.dot_product(v3), 10)
+    dp3 = round(v1.dot_product(v3), 10)
     return dp1 == 0 and dp2 == 0 and dp3 == 0
 
 
@@ -48,7 +48,7 @@ class TestCamera:
 
         cam = Camera(location, look_at, v_up, 90, 2, 2)
 
-        ray = cam.get_ray(1, 1)
+        ray = cam.get_ray(0, 0)
 
         assert ray.origin == location
         assert ray.direction == Vector(0, 0, 90).normalized()
