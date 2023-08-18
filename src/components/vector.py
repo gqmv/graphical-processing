@@ -6,11 +6,11 @@ from typing import Any, Self, Type, TypeVar, Union
 import src.components
 from src.components.transformations import Transformable
 
-U = TypeVar("U")
-
 
 class Vector(Transformable):
     """A 3D vector"""
+
+    U = TypeVar("U", "Vector", "src.components.Color", "src.components.point.Point")
 
     def __init__(self, x: float, y: float, z: float):
         self.x = x
@@ -32,11 +32,16 @@ class Vector(Transformable):
 
         return self.x == other.x and self.y == other.y and self.z == other.z
 
-    def __add__(
-        self, other: Union[Self, src.components.Point]
-    ) -> Self | src.components.Point:
+    def __add__(self, other: U) -> U:
         if isinstance(other, src.components.Point):
             return other + self
+
+        if isinstance(other, src.components.Color):
+            if isinstance(self, src.components.Color):
+                return self.__class__(
+                    self.r + other.r, self.g + other.g, self.b + other.b
+                )
+            raise TypeError("Cannot add a color to a vector")
 
         return self.__class__(self.x + other.x, self.y + other.y, self.z + other.z)
 
