@@ -3,10 +3,9 @@ from __future__ import annotations
 import math
 from typing import Any, Self, Type, TypeVar, Union
 
-import numpy as np
-
 import src.components
 from src.components.transformations import Transformable
+
 
 U = TypeVar("U")
 
@@ -21,6 +20,9 @@ class Vector(Transformable):
 
     def __str__(self) -> str:
         return f"({self.x}, {self.y}, {self.z})"
+
+    def __hash__(self) -> int:
+        return hash((self.x, self.y, self.z))
 
     def __repr__(self) -> str:
         return f"Vector({self.x}, {self.y}, {self.z})"

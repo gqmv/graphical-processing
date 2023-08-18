@@ -33,7 +33,9 @@ class Material:
         self, light: Light, normal_at_position: Vector, hit_position: Point
     ) -> Color:
         """Returns the diffuse component of the material according to phong's model."""
-        to_light = light.position - hit_position
+        if self.color == Color(0, 0, 1):
+            pass
+        to_light = (light.position - hit_position).normalized()
         return (
             (light.color * self.color)
             * self.diffusion_coefficient
@@ -48,14 +50,16 @@ class Material:
         spectator_position: Point,
     ) -> Color:
         """Returns the specular component of the material according to phong's model."""
-        to_light = light.position - hit_position
+        if self.specular_coefficient == 1:
+            pass
+        to_light = (light.position - hit_position).normalized()
         reflection_vector = (
-            2 * (normal_at_position.dot_product(to_light)) * normal_at_position
+            2 * normal_at_position * (normal_at_position.dot_product(to_light))
             - to_light
         )
-        to_spectator = spectator_position - hit_position
+        to_spectator = (spectator_position - hit_position).normalized()
         return (
-            light.color
+            (light.color * self.color)
             * self.specular_coefficient
             * (max(reflection_vector.dot_product(to_spectator), 0))
             ** self.rugosity_coefficient

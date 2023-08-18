@@ -48,7 +48,7 @@ def color_at(
     for light in scene.lights:
         light_ray = Ray(hit_position, light.position - hit_position)
         distance_hit, _, obj = find_nearest_intersection(scene, light_ray)
-        
+
         if obj is not None and obj != object_hit:
             continue
 
@@ -60,12 +60,12 @@ def color_at(
         )
 
         # Specular
-        # color += object_hit.material.get_specular_component(
-        #     light=light,
-        #     hit_position=hit_position,
-        #     normal_at_position=normal_at_position,
-        #     spectator_position=scene.camera.position,  # TODO: When reccursive ray-tracing is implemented, the spectator will change.
-        # )
+        color += object_hit.material.get_specular_component(
+            light=light,
+            hit_position=hit_position,
+            normal_at_position=normal_at_position,
+            spectator_position=scene.camera.position,  # TODO: When reccursive ray-tracing is implemented, the spectator will change.
+        )
 
     return color
 

@@ -4,6 +4,23 @@ from src.components.point import *
 from src.components.ray import Ray
 from src.components.vector import *
 
+from functools import lru_cache
+
+
+@lru_cache
+def _get_v_w(position: Point, look_at: Point) -> Vector:
+    return (look_at - position).normalized()
+
+
+@lru_cache
+def _get_v_u(v_up: Vector, v_w: Vector) -> Vector:
+    return v_up.cross_product(v_w).normalized()
+
+
+@lru_cache
+def _get_v_v(v_w: Vector, v_u: Vector) -> Vector:
+    return v_w.cross_product(v_u)
+
 
 class Camera:
     """A movable camera that can be used to render a scene."""
@@ -29,15 +46,15 @@ class Camera:
 
     @property
     def v_w(self) -> Vector:
-        return (self.look_at - self.position).normalized()
+        return _get_v_w(self.position, self.look_at)
 
     @property
     def v_u(self) -> Vector:
-        return self.v_up.cross_product(self.v_w).normalized()
+        return _get_v_u(self.v_up, self.v_w)
 
     @property
     def v_v(self) -> Vector:
-        return self.v_w.cross_product(self.v_u)
+        return _get_v_v(self.v_w, self.v_u)
 
     def get_ray(self, i: int, j: int) -> Ray:
         """Returns a ray from the camera to the pixel (i, j)"""
