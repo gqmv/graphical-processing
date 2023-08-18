@@ -9,6 +9,8 @@ from src.components.ray import Ray
 from src.components.scene import Scene
 from src.components.vector import Vector
 
+from multiprocessing import Pool, Lock, Manager
+
 
 def find_nearest_intersection(
     scene: Scene, ray: Ray
@@ -99,15 +101,56 @@ def trace_ray(ray: Ray, scene: Scene) -> Color:
     )
 
 
-def render_scene(scene: Scene) -> Image:
+def _render_ray(x: int, y: int, scene: Scene):
+    """Render a ray and return the color."""
+    ray = scene.camera.get_ray(x, y)
+    color = trace_ray(ray, scene)
+
+    return color
+
+
+def render_scene_single_thread(scene: Scene) -> Image:
     """Render a scene and return the image."""
-    image = Image(scene.camera.vertical_resolution, scene.camera.horizontal_resolution)
-
+    pixels = []
     for y in range(scene.camera.vertical_resolution):
-        for x in range(scene.camera.horizontal_resolution):
-            ray = scene.camera.get_ray(x, y)
-            color = trace_ray(ray, scene)
+        pixels.append(
+            [
+                _render_ray(x, y, scene)
+                for x in range(scene.camera.horizontal_resolution)
+            ]
+        )
 
-            image.set_pixel(x, y, color)
+    image = Image(
+        scene.camera.vertical_resolution, scene.camera.horizontal_resolution, pixels
+    )
+    return image
+
+
+def render_scene_multi_threaded(scene: Scene) -> Image:
+    """Render a scene and return the image."""
+    pixels = []
+    with Pool() as p:
+        results = []
+        for y in range(scene.camera.vertical_resolution):
+            results.append(
+                p.starmap_async(
+                    _render_ray,
+                    [(x, y, scene) for x in range(scene.camera.horizontal_resolution)],
+                )
+            )
+        for result in results:
+            pixels.append(result.get())
+
+    image = Image(
+        scene.camera.vertical_resolution, scene.camera.horizontal_resolution, pixels
+    )
 
     return image
+
+
+def render_scene(scene: Scene, multithread: bool = False) -> Image:
+    """Render a scene and return the image."""
+    if multithread:
+        return render_scene_multi_threaded(scene)
+    else:
+        return render_scene_single_thread(scene)

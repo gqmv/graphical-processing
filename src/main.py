@@ -107,12 +107,9 @@ def main():
         background_color=Color(0, 0, 0),
     )
 
-    img = render_scene(scene)
+    img = render_scene(scene=scene, multithread=True)
     img.write_ppm("notion.ppm")
 
 
 if __name__ == "__main__":
-    cProfile.run("main()", "profile")
-
-    p = pstats.Stats("profile")
-    p.sort_stats("cumulative").print_stats()
+    main()

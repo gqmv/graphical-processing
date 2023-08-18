@@ -6,13 +6,25 @@ from src.components.color import Color
 class Image:
     """A class representing an image."""
 
-    def __init__(self, vertical_resolution: int, horizontal_resolution: int):
+    def __init__(
+        self,
+        vertical_resolution: int,
+        horizontal_resolution: int,
+        pixels: list[list[Color]] | None = None,
+    ):
         self.vertical_resolution = vertical_resolution
         self.horizontal_resolution = horizontal_resolution
-        self._pixels = [
-            [Color(0, 0, 0) for _ in range(horizontal_resolution)]
-            for _ in range(vertical_resolution)
-        ]
+        if pixels is None:
+            self._pixels = [
+                [Color(0, 0, 0) for _ in range(horizontal_resolution)]
+                for _ in range(vertical_resolution)
+            ]
+        else:
+            self._pixels = pixels
+
+    def set_pixels(self, pixels: list[list[Color]]) -> None:
+        """Set the pixels of the image."""
+        self._pixels = pixels
 
     def get_pixel(self, x: int, y: int) -> Color:
         """Get the color of a pixel."""
