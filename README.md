@@ -13,18 +13,36 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Executando o projeto
+### Criando cenas
 
-Para executar o projeto, execute o seguinte comando:
-
+Para criar cenas, é necessário utilizar o comando a seguir:
+    
 ```bash
-python -m src.main
+python -m src.scene_creator [arquivo_destino]
 ```
 
-### Executando os testes
+Onde `[arquivo_destino]` é o caminho para o arquivo que será criado. O arquivo será criado no formato JSON.
 
-Para executar os testes, execute o seguinte comando:
+OBS: Em caso de dúvidas, execute o comando `python -m src.scene_creator --help` para mais informações.
+
+### Renderizando cenas
+
+Para renderizar cenas, é necessário utilizar o comando a seguir:
 
 ```bash
-pytest --cov=src tests/
+python -m src.main [arquivo_cena] [arquivo_imagem]
 ```
+
+Onde `[arquivo_cena]` é o caminho para o arquivo que será renderizado e `[arquivo_imagem]` é o caminho para o arquivo que será criado. O arquivo será criado no formato PNG.
+
+OBS: Em caso de dúvidas, execute o comando `python -m src.main --help` para mais informações.
+
+### Exemplos
+
+Cenas de exemplo podem ser encontradas na pasta `demos`. Para renderizar uma cena de exemplo, basta executar o comando a seguir:
+
+```bash
+python -m src.main demos/[arquivo_cena] [arquivo_imagem]
+```
+
+Onde `[arquivo_cena]` é o nome do arquivo que será renderizado e `[arquivo_imagem]` é o caminho para o arquivo que será criado. O arquivo será criado no formato PPM.
