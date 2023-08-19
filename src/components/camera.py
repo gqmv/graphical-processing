@@ -4,6 +4,7 @@ from functools import lru_cache
 
 from src.components.point import *
 from src.components.ray import Ray
+from src.components.transformations import Transformable
 from src.components.vector import *
 
 
@@ -22,7 +23,7 @@ def _get_v_v(v_w: Vector, v_u: Vector) -> Vector:
     return v_w.cross_product(v_u)
 
 
-class Camera:
+class Camera(Transformable):
     """A movable camera that can be used to render a scene."""
 
     def __init__(
@@ -55,6 +56,19 @@ class Camera:
     @property
     def v_v(self) -> Vector:
         return _get_v_v(self.v_w, self.v_u)
+
+    def transform(self, matrix: list[list[float]]) -> Camera:
+        position = self.position.transform(matrix)
+        look_at = self.look_at.transform(matrix)
+
+        return Camera(
+            position=position,
+            look_at=look_at,
+            v_up=self.v_up,
+            distance_from_screen=self.distance_from_screen,
+            vertical_resolution=self.vertical_resolution,
+            horizontal_resolution=self.horizontal_resolution,
+        )
 
     def get_ray(self, i: int, j: int) -> Ray:
         """Returns a ray from the camera to the pixel (i, j)"""
