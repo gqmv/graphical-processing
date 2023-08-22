@@ -8,7 +8,13 @@ from src.components.camera import Camera
 from src.components.color import Color
 from src.components.light import Light
 from src.components.material import Material
-from src.components.objects_in_space import Object, Plane, Sphere
+from src.components.objects_in_space import (
+    Object,
+    Plane,
+    Sphere,
+    Triangle,
+    TriangleMesh,
+)
 from src.components.point import Point
 from src.components.scene import Scene
 from src.components.vector import Vector
@@ -47,7 +53,7 @@ def get_material(materials: dict[str, Material]) -> Material:
             print("Invalid material. Please try again.")
 
 
-def get_sphere(material: Material) -> Object:
+def get_sphere(material: Material) -> Sphere:
     """Gets a sphere from the user."""
     while True:
         radius = float(input("Enter the radius of the sphere: "))
@@ -63,7 +69,7 @@ def get_sphere(material: Material) -> Object:
             print("Invalid center. Please try again.")
 
 
-def get_plane(material: Material) -> Object:
+def get_plane(material: Material) -> Plane:
     while True:
         normal = input("Enter the normal of the plane (x, y, z): ")
         point = input("Enter the point of the plane (x, y, z): ")
@@ -79,9 +85,50 @@ def get_plane(material: Material) -> Object:
             print("Invalid normal or point. Please try again.")
 
 
+def get_triangle(material: Material) -> Triangle:
+    while True:
+        v1 = input("Enter the first vertex of the triangle (x, y, z): ")
+        v2 = input("Enter the second vertex of the triangle (x, y, z): ")
+        v3 = input("Enter the third vertex of the triangle (x, y, z): ")
+        normal = input("Enter the normal of the triangle (x, y, z): ")
+
+        try:
+            normal_x, normal_y, normal_z = normal[1:-1].split(", ")
+            v1_x, v1_y, v1_z = v1[1:-1].split(", ")
+            v2_x, v2_y, v2_z = v2[1:-1].split(", ")
+            v3_x, v3_y, v3_z = v3[1:-1].split(", ")
+            return Triangle(
+                material=material,
+                points=(
+                    Point(float(v1_x), float(v1_y), float(v1_z)),
+                    Point(float(v2_x), float(v2_y), float(v2_z)),
+                    Point(float(v3_x), float(v3_y), float(v3_z)),
+                ),
+                normal=Vector(float(normal_x), float(normal_y), float(normal_z)),
+                points_normal=(
+                    Vector(float(normal_x), float(normal_y), float(normal_z)),
+                    Vector(float(normal_x), float(normal_y), float(normal_z)),
+                    Vector(float(normal_x), float(normal_y), float(normal_z)),
+                ),
+            )
+        except ValueError:
+            print("Invalid normal or point. Please try again.")
+
+
+def get_triangle_mesh(material: Material) -> TriangleMesh:
+    triangles = []
+    first_run = True
+    while first_run or ask_continue("triangles"):
+        first_run = False
+        triangles.append(get_triangle(material))
+
+    return TriangleMesh(material=material, triangles=triangles)
+
+
 OBJECT_CREATOR_FUNCTIONS = {
     "sphere": get_sphere,
     "plane": get_plane,
+    "mesh": get_triangle_mesh,
 }
 
 
@@ -185,24 +232,61 @@ def main():
     ap = ArgumentParser()
 
     ap.add_argument("destination", help="The destination of the scene file", type=Path)
+    ap.add_argument(
+        "-e",
+        "--edit",
+        help="Edit an existing scene file",
+        action="store_true",
+    )
 
     args = ap.parse_args()
 
-    materials = create_scene_materials()
-    objects = create_scene_objects(materials)
-    lights = create_scene_lights()
-    camera = create_camera()
+    if not args.edit:
+        materials = create_scene_materials()
+        objects = create_scene_objects(materials)
+        lights = create_scene_lights()
+        camera = create_camera()
 
-    ambient_color = get_color("ambient")
-    background_color = get_color("background")
+        ambient_color = get_color("ambient")
+        background_color = get_color("background")
 
-    scene = Scene(
-        camera=camera,
-        objects=objects,
-        lights=lights,
-        ambient_color=ambient_color,
-        background_color=background_color,
-    )
+        scene = Scene(
+            camera=camera,
+            objects=objects,
+            lights=lights,
+            ambient_color=ambient_color,
+            background_color=background_color,
+        )
+    else:
+        with open(args.destination, "r") as f:
+            scene: Scene = jsonpickle.decode(f.read())
+
+        while True:
+            print("What do you want to edit?")
+            print("1. Camera")
+            print("2. Add Objects")
+            print("3. Add Lights")
+            print("4. Ambient color")
+            print("5. Background color")
+            print("6. Save and exit")
+
+            answer = input("Enter your choice: ")
+            match answer:
+                case "1":
+                    scene.camera = create_camera()
+                case "2":
+                    materials = create_scene_materials()
+                    scene.objects.extend(create_scene_objects(materials=materials))
+                case "3":
+                    scene.lights.extend(create_scene_lights())
+                case "4":
+                    scene.ambient_color = get_color("ambient")
+                case "5":
+                    scene.background_color = get_color("background")
+                case "6":
+                    break
+                case _:
+                    print("Invalid choice. Please try again.")
 
     with open(args.destination, "w") as f:
         f.write(jsonpickle.encode(scene))

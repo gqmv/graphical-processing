@@ -51,15 +51,16 @@ class Sphere(Object):
 
         discriminant = b_coeff**2 - 4 * a_coeff * c_coeff
 
+        EPSILON = 0.0001
         if discriminant >= 0:
             distance = (-b_coeff - math.sqrt(discriminant)) / (2 * a_coeff)
-            if distance > 0.001:
+            if distance > EPSILON:
                 return distance, self.get_normal_at_point(
                     ray.origin + distance * ray.direction
                 )
 
             distance = (-b_coeff + math.sqrt(discriminant)) / (2 * a_coeff)
-            if distance > 0.001:
+            if distance > EPSILON:
                 return distance, self.get_normal_at_point(
                     ray.origin + distance * ray.direction
                 )
@@ -79,13 +80,14 @@ class Plane(Object):
         return self.normal
 
     def find_intersection(self, ray: Ray) -> tuple[float, Vector] | tuple[None, None]:
-        if abs(ray.direction.dot_product(self.normal)) < 0.001:
+        EPSILON = 0.0001
+        if abs(ray.direction.dot_product(self.normal)) < EPSILON:
             return None, None
 
         distance = self.normal.dot_product(
             self.point - ray.origin
         ) / ray.direction.dot_product(self.normal)
-        if distance > 0.001:
+        if distance > EPSILON:
             return distance, self.normal
 
         return None, None
@@ -106,6 +108,39 @@ class Triangle(Object):
         self.normal = normal.normalized()
         self.points_normal = points_normal
 
+    def get_normal_at_point(self, point: Point) -> Vector:
+        return self.normal
+
+    def find_intersection(self, ray: Ray) -> tuple[float, Vector] | tuple[None, None]:
+        edge1 = self.points[1] - self.points[0]
+        edge2 = self.points[2] - self.points[0]
+
+        h = ray.direction.cross_product(edge2)
+        a = edge1.dot_product(h)
+
+        EPSILON = 0.0001
+        if a > -EPSILON and a < EPSILON:
+            return None, None
+
+        f = 1 / a
+        s = ray.origin - self.points[0]
+        u = f * s.dot_product(h)
+
+        if u < 0 or u > 1:
+            return None, None
+
+        q = s.cross_product(edge1)
+        v = f * ray.direction.dot_product(q)
+
+        if v < 0 or u + v > 1:
+            return None, None
+
+        t = f * edge2.dot_product(q)
+        if t > EPSILON:
+            return t, self.normal
+
+        return None, None
+
 
 class TriangleMesh(Object):
     """Class for triangle mesh objects."""
@@ -113,3 +148,53 @@ class TriangleMesh(Object):
     def __init__(self, material: Material, triangles: list[Triangle]):
         super().__init__(material)
         self.triangles = triangles
+
+    def find_intersection(self, ray: Ray) -> tuple[float, Vector] | tuple[None, None]:
+        distance = float("inf")
+        normal = None
+        for triangle in self.triangles:
+            triangle_distance, triangle_normal = triangle.find_intersection(ray)
+            if triangle_distance is not None and triangle_distance < distance:
+                distance = triangle_distance
+                normal = triangle_normal
+
+        if normal is None:
+            return None, None
+
+        return distance, normal
+
+    def find_triangle_at_point(self, point: Point) -> Triangle | None:
+        EPSILON = 0.0001
+        for triangle in self.triangles:
+            edge1 = triangle.points[1] - triangle.points[0]
+            edge2 = triangle.points[2] - triangle.points[0]
+
+            h = edge2.cross_product(triangle.normal)
+            a = edge1.dot_product(h)
+
+            if a > -EPSILON and a < EPSILON:
+                continue
+
+            f = 1 / a
+            s = point - triangle.points[0]
+            u = f * s.dot_product(h)
+
+            if u < 0 or u > 1:
+                continue
+
+            q = s.cross_product(edge1)
+            v = f * edge2.dot_product(q)
+
+            if v < 0 or u + v > 1:
+                continue
+
+            return triangle
+
+        return None
+
+    def get_normal_at_point(self, point: Point) -> Vector:
+        triangle = self.find_triangle_at_point(point)
+        if triangle is None:
+            raise Exception("No triangle found at point")
+
+        return triangle.get_normal_at_point(point)
