@@ -7,3 +7,4 @@ isort
 coverage
 jsonpickle
 viztracer[full]
+pygame

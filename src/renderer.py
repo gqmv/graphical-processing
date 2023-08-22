@@ -66,7 +66,7 @@ def color_at(
             spectator_position=scene.camera.position,  # TODO: When reccursive ray-tracing is implemented, the spectator will change.
         )
 
-    return color
+    return color * object_hit.material.color
 
 
 def trace_ray(ray: Ray, scene: Scene) -> Color:

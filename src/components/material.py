@@ -27,7 +27,7 @@ class Material:
 
     def get_ambient_component(self, scene_color: Color) -> Color:
         """Returns the ambient component of the material according to phong's model."""
-        return self.ambient_coefficient * scene_color * self.color
+        return self.ambient_coefficient * scene_color
 
     def get_diffuse_component(
         self, light: Light, normal_at_position: Vector, hit_position: Point
@@ -35,7 +35,7 @@ class Material:
         """Returns the diffuse component of the material according to phong's model."""
         to_light = (light.position - hit_position).normalized()
         return (
-            (light.color * self.color)
+            (light.color)
             * self.diffusion_coefficient
             * max((normal_at_position.dot_product(to_light)), 0)
         )
@@ -55,7 +55,7 @@ class Material:
         )
         to_spectator = (spectator_position - hit_position).normalized()
         return (
-            (light.color * self.color)
+            (light.color)
             * self.specular_coefficient
             * (max(reflection_vector.dot_product(to_spectator), 0))
             ** self.rugosity_coefficient

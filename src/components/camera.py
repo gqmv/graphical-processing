@@ -57,6 +57,17 @@ class Camera(Transformable):
     def v_v(self) -> Vector:
         return _get_v_v(self.v_w, self.v_u)
 
+    def move_relative(self, x: float, y: float, z: float) -> Camera:
+        """Moves the camera relative to its current position. Note that the look_at point is not changed."""
+        return Camera(
+            position=self.position + self.v_w * z + self.v_u * x + self.v_v * y,
+            look_at=self.look_at,
+            v_up=self.v_up,
+            distance_from_screen=self.distance_from_screen,
+            vertical_resolution=self.vertical_resolution,
+            horizontal_resolution=self.horizontal_resolution,
+        )
+
     def transform(self, matrix: list[list[float]]) -> Camera:
         position = self.position.transform(matrix)
         look_at = self.look_at.transform(matrix)
