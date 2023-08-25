@@ -49,6 +49,19 @@ python -m src.scene_manager -e [arquivo_cena]
 Onde `[arquivo_cena]` é o caminho para o arquivo que será editado.
 
 
+### Renderização em tempo real
+
+Para renderizar cenas em tempo real, é necessário utilizar o comando a seguir:
+
+```bash
+python -m src.realtime_renderer [arquivo_cena]
+```
+
+Onde `[arquivo_cena]` é o caminho para o arquivo que será renderizado.
+
+ATENÇÃO: Este recurso é extremamente experimental. A renderização será lenta e travada. Para sair, utilize o atalho `Esc`.
+
+
 ### Exemplos
 
 Cenas de exemplo podem ser encontradas na pasta `demos`. Para renderizar uma cena de exemplo, basta executar o comando a seguir:
