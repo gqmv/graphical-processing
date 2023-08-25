@@ -1,13 +1,15 @@
 import math
 from abc import ABC, abstractmethod
+from typing import Self
 
 from src.components.material import Material
 from src.components.point import Point
 from src.components.ray import Ray
+from src.components.transformations import Transformable
 from src.components.vector import Vector
 
 
-class Object(ABC):
+class Object(ABC, Transformable):
     """Abstract class for all objects in space."""
 
     def __init__(self, material: Material):
@@ -67,6 +69,10 @@ class Sphere(Object):
 
         return None, None
 
+    def _transform(self, matrix: list[list[float]]) -> Self:
+        center = self.center.transform(matrix)
+        return self.__class__(self.material, self.radius, center)
+
 
 class Plane(Object):
     """Class for plane objects."""
@@ -92,6 +98,11 @@ class Plane(Object):
 
         return None, None
 
+    def _transform(self, matrix: list[list[float]]) -> Self:
+        point = self.point.transform(matrix)
+        normal = self.normal.transform(matrix)
+        return self.__class__(self.material, normal, point)
+
 
 class Triangle(Object):
     """Class for triangle objects."""
@@ -101,12 +112,10 @@ class Triangle(Object):
         material: Material,
         points: tuple[Point, Point, Point],
         normal: Vector,
-        points_normal: tuple[Vector, Vector, Vector],
     ):
         super().__init__(material)
         self.points = points
         self.normal = normal.normalized()
-        self.points_normal = points_normal
 
     def get_normal_at_point(self, point: Point) -> Vector:
         return self.normal
@@ -140,6 +149,11 @@ class Triangle(Object):
             return t, self.normal
 
         return None, None
+
+    def _transform(self, matrix: list[list[float]]) -> Self:
+        points = tuple(point.transform(matrix) for point in self.points)
+        normal = self.normal.transform(matrix)
+        return self.__class__(self.material, points, normal)  # type: ignore
 
 
 class TriangleMesh(Object):
@@ -198,3 +212,7 @@ class TriangleMesh(Object):
             raise Exception("No triangle found at point")
 
         return triangle.get_normal_at_point(point)
+
+    def _transform(self, matrix: list[list[float]]) -> Self:
+        triangles = [triangle.transform(matrix) for triangle in self.triangles]
+        return self.__class__(self.material, triangles)

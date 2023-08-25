@@ -94,8 +94,8 @@ class Transformable:
         self,
         point: src.components.point.Point,
         vector: src.components.vector.Vector,
-        angle_radians: float | None,
-        angle_degrees: float | None,
+        angle_radians: float | None = None,
+        angle_degrees: float | None = None,
     ) -> Self:
         """Return the object after being rotated by angle(degrees) around the axis defined by a point and a vector clockwise"""
 

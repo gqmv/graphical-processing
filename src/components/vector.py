@@ -113,8 +113,6 @@ class Vector(Transformable):
         )
 
     def _transform(self, matrix: Matrix) -> Self:
-        super().transform(matrix)
-
         if len(matrix) == 3:
             return self._transform_3x3(matrix)
 
