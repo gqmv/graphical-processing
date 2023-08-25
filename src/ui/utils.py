@@ -19,6 +19,9 @@ class GeneralizedFuntionRegistry(Generic[T]):
     def get(self, name: str) -> T:
         return self.registry[name]
 
+    def __iter__(self):
+        return iter(self.registry)
+
 
 def ask_continue(object_type: str) -> bool:
     """Asks the user if they want to continue."""

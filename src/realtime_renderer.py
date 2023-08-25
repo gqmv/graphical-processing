@@ -5,7 +5,7 @@ import jsonpickle
 import pygame as pg
 
 from src.components.scene import Scene
-from src.renderer import render_scene
+from src.rendering_engine import render_scene
 
 
 def main():

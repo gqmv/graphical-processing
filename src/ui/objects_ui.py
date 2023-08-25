@@ -98,6 +98,10 @@ def create_triangle_mesh(material: Material) -> TriangleMesh:
 def get_object_creation_function() -> Callable[[Material], Object]:
     """Gets the object creator function."""
     while True:
+        print("Available object types:")
+        for object_type in object_creation_function_registry:
+            print(f" - {object_type}")
+
         object_type = input("Enter the type of the object: ").lower()
         try:
             return object_creation_function_registry.get(object_type)

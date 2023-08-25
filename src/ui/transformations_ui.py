@@ -82,6 +82,10 @@ def scale(obj: T) -> T:
 def get_transformation_function():
     """Gets a transformation function from user input."""
     while True:
+        print("Available transformation functions:")
+        for transformation_function in transformation_function_registry:
+            print(f" - {transformation_function}")
+
         transformation_function = input(
             "Enter the name of the transformation function: "
         )
