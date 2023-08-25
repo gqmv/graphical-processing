@@ -68,7 +68,7 @@ class Camera(Transformable):
             horizontal_resolution=self.horizontal_resolution,
         )
 
-    def transform(self, matrix: list[list[float]]) -> Camera:
+    def _transform(self, matrix: list[list[float]]) -> Camera:
         position = self.position.transform(matrix)
         look_at = self.look_at.transform(matrix)
 

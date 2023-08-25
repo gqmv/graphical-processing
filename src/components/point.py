@@ -53,7 +53,7 @@ class Point(Transformable):
             + matrix[2][3],
         )
 
-    def transform(self, matrix: Matrix) -> Point:
+    def _transform(self, matrix: Matrix) -> Point:
         super().transform(matrix)
 
         if len(matrix) == 3:
