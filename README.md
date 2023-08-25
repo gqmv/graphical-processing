@@ -64,7 +64,7 @@ ATENÇÃO: Este recurso é extremamente experimental. A renderização será len
 
 ### Exemplos
 
-Cenas de exemplo podem ser encontradas na pasta `demos`. Para renderizar uma cena de exemplo, basta executar o comando a seguir:
+Cenas de exemplo podem ser encontradas na pasta `demo`. Para renderizar uma cena de exemplo, basta executar o comando a seguir:
 
 ```bash
 python -m src.renderer demo/[arquivo_cena] [arquivo_imagem]
