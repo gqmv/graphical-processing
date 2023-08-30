@@ -11,7 +11,9 @@ from src.components.objects_in_space import (
 from src.components.point import Point
 from src.components.vector import Vector
 from src.ui.material_ui import get_material
-from src.ui.utils import GeneralizedFuntionRegistry, ask_continue, get_triplet
+from src.ui.point_ui import get_point
+from src.ui.utils import GeneralizedFuntionRegistry, ask_continue
+from src.ui.vector_ui import get_vector
 
 
 class ObjectCreationFunctionRegistry(
@@ -29,11 +31,10 @@ def create_sphere(material: Material) -> Sphere:
     while True:
         radius = float(input("Enter the radius of the sphere: "))
         try:
-            x, y, z = get_triplet("Enter the center of the sphere (x, y, z): ")
             return Sphere(
                 material=material,
                 radius=radius,
-                center=Point(float(x), float(y), float(z)),
+                center=get_point("Enter the center of the sphere (x, y, z): "),
             )
         except ValueError:
             print("Invalid center. Please try again.")
@@ -44,19 +45,26 @@ def create_plane(material: Material) -> Plane:
     """Creates a plane from user input."""
     while True:
         try:
-            normal_x, normal_y, normal_z = get_triplet(
-                "Enter the normal of the plane (x, y, z): "
-            )
-            point_x, point_y, point_z = get_triplet(
-                "Enter the point of the plane (x, y, z): "
-            )
             return Plane(
                 material=material,
-                point=Point(float(point_x), float(point_y), float(point_z)),
-                normal=Vector(float(normal_x), float(normal_y), float(normal_z)),
+                point=get_point("Enter the point of the plane (x, y, z): "),
+                normal=get_vector("Enter the normal of the plane (x, y, z): "),
             )
         except ValueError:
             print("Invalid normal or point. Please try again.")
+
+
+def get_triangle_normal(point_1: Point, point_2: Point, point_3: Point) -> Vector:
+    """Asks the user which normal to use for the triangle."""
+    vector_1 = point_2 - point_1
+    vector_2 = point_3 - point_1
+    normal = vector_1.cross_product(vector_2).normalized()
+
+    print("Calculated normals: (You can use a different one if you want)")
+    print(f" - {normal}")
+    print(f" - {-normal}")
+
+    return get_vector("Enter the normal of the triangle: (x, y, z)").normalized()
 
 
 # NOTE: Since the user should never be able to create a triangle that is not part of a mesh, this function is not registered.
@@ -64,20 +72,15 @@ def create_triangle(material: Material) -> Triangle:
     """Creates a triangle from user input."""
     while True:
         try:
-            normal_x, normal_y, normal_z = get_triplet(
-                "Enter the normal of the triangle (x, y, z): "
-            )
-            v1_x, v1_y, v1_z = get_triplet("Enter the first point of the triangle: ")
-            v2_x, v2_y, v2_z = get_triplet("Enter the second point of the triangle: ")
-            v3_x, v3_y, v3_z = get_triplet("Enter the third point of the triangle: ")
+            point_1 = get_point("Enter the first point of the triangle (x, y, z): ")
+            point_2 = get_point("Enter the second point of the triangle (x, y, z): ")
+            point_3 = get_point("Enter the third point of the triangle (x, y, z): ")
+            normal = get_triangle_normal(point_1, point_2, point_3)
+
             return Triangle(
                 material=material,
-                points=(
-                    Point(float(v1_x), float(v1_y), float(v1_z)),
-                    Point(float(v2_x), float(v2_y), float(v2_z)),
-                    Point(float(v3_x), float(v3_y), float(v3_z)),
-                ),
-                normal=Vector(float(normal_x), float(normal_y), float(normal_z)),
+                points=(point_1, point_2, point_3),
+                normal=normal,
             )
         except ValueError:
             print("Invalid normal or point. Please try again.")
