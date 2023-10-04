@@ -216,3 +216,20 @@ class TriangleMesh(Object):
     def _transform(self, matrix: list[list[float]]) -> Self:
         triangles = [triangle.transform(matrix) for triangle in self.triangles]
         return self.__class__(self.material, triangles)
+
+
+class BezierSurface(Object):
+    """Class for bezier surface objects."""
+
+    def __init__(self, material: Material, points: list[list[Point]]):
+        super().__init__(material)
+        self.points = points
+
+    def get_normal_at_point(self, point: Point) -> Vector:
+        pass
+
+    def find_intersection(self, ray: Ray) -> tuple[float, Vector] | tuple[None, None]:
+        pass
+
+    def _transform(self, matrix: list[list[float]]) -> Self:
+        pass

@@ -1,0 +1,392 @@
+{
+    "py/object": "src.components.scene.Scene",
+    "camera": {
+        "py/object": "src.components.camera.Camera",
+        "position": {
+            "py/object": "src.components.point.Point",
+            "x": -10.0,
+            "y": 1.0,
+            "z": -3.0
+        },
+        "look_at": {
+            "py/object": "src.components.point.Point",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "v_up": {
+            "py/object": "src.components.vector.Vector",
+            "x": 0.0,
+            "y": 1.0,
+            "z": 0.0
+        },
+        "distance_from_screen": 800.0,
+        "vertical_resolution": 500,
+        "horizontal_resolution": 500
+    },
+    "objects": [
+        {
+            "py/object": "src.components.objects_in_space.TriangleMesh",
+            "material": {
+                "py/object": "src.components.material.Material",
+                "color": {
+                    "py/object": "src.components.color.Color",
+                    "x": 1.0,
+                    "y": 0.0,
+                    "z": 0.0
+                },
+                "diffusion_coefficient": 0.0,
+                "specular_coefficient": 1.0,
+                "ambient_coefficient": 1.0,
+                "reflection_coefficient": 1,
+                "transmission_coefficient": 0,
+                "rugosity_coefficient": 500.0
+            },
+            "triangles": [
+                {
+                    "py/object": "src.components.objects_in_space.Triangle",
+                    "material": {
+                        "py/id": 7
+                    },
+                    "points": {
+                        "py/tuple": [
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 2.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 2.0,
+                                "y": -1.0,
+                                "z": 0.0
+                            },
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 3.0,
+                                "y": 0.0,
+                                "z": 1.0
+                            }
+                        ]
+                    },
+                    "normal": {
+                        "py/object": "src.components.vector.Vector",
+                        "x": 0.7071067811865476,
+                        "y": -0.0,
+                        "z": -0.7071067811865476
+                    }
+                },
+                {
+                    "py/object": "src.components.objects_in_space.Triangle",
+                    "material": {
+                        "py/id": 7
+                    },
+                    "points": {
+                        "py/tuple": [
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 2.0,
+                                "y": -1.0,
+                                "z": 0.0
+                            },
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 3.0,
+                                "y": 0.0,
+                                "z": 1.0
+                            },
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 3.0,
+                                "y": -1.0,
+                                "z": 1.0
+                            }
+                        ]
+                    },
+                    "normal": {
+                        "py/object": "src.components.vector.Vector",
+                        "x": 0.7071067811865476,
+                        "y": -0.0,
+                        "z": -0.7071067811865476
+                    }
+                },
+                {
+                    "py/object": "src.components.objects_in_space.Triangle",
+                    "material": {
+                        "py/id": 7
+                    },
+                    "points": {
+                        "py/tuple": [
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 2.0,
+                                "y": -1.0,
+                                "z": 0.0
+                            },
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 2.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 3.0,
+                                "y": 0.0,
+                                "z": -1.0
+                            }
+                        ]
+                    },
+                    "normal": {
+                        "py/object": "src.components.vector.Vector",
+                        "x": 0.7071067811865476,
+                        "y": -0.0,
+                        "z": 0.7071067811865476
+                    }
+                },
+                {
+                    "py/object": "src.components.objects_in_space.Triangle",
+                    "material": {
+                        "py/id": 7
+                    },
+                    "points": {
+                        "py/tuple": [
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 2.0,
+                                "y": -1.0,
+                                "z": 0.0
+                            },
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 3.0,
+                                "y": 0.0,
+                                "z": -1.0
+                            },
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 3.0,
+                                "y": -1.0,
+                                "z": -1.0
+                            }
+                        ]
+                    },
+                    "normal": {
+                        "py/object": "src.components.vector.Vector",
+                        "x": 1.0,
+                        "y": -0.0,
+                        "z": -0.0
+                    }
+                },
+                {
+                    "py/object": "src.components.objects_in_space.Triangle",
+                    "material": {
+                        "py/id": 7
+                    },
+                    "points": {
+                        "py/tuple": [
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 2.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 3.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 3.0,
+                                "y": 0.0,
+                                "z": -1.0
+                            }
+                        ]
+                    },
+                    "normal": {
+                        "py/object": "src.components.vector.Vector",
+                        "x": -0.0,
+                        "y": 1.0,
+                        "z": 0.0
+                    }
+                },
+                {
+                    "py/object": "src.components.objects_in_space.Triangle",
+                    "material": {
+                        "py/id": 7
+                    },
+                    "points": {
+                        "py/tuple": [
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 2.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 3.0,
+                                "y": 0.0,
+                                "z": 0.0
+                            },
+                            {
+                                "py/object": "src.components.point.Point",
+                                "x": 3.0,
+                                "y": 0.0,
+                                "z": 1.0
+                            }
+                        ]
+                    },
+                    "normal": {
+                        "py/object": "src.components.vector.Vector",
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "py/object": "src.components.objects_in_space.Sphere",
+            "material": {
+                "py/object": "src.components.material.Material",
+                "color": {
+                    "py/object": "src.components.color.Color",
+                    "x": 0.0,
+                    "y": 1.0,
+                    "z": 0.0
+                },
+                "diffusion_coefficient": 0.3,
+                "specular_coefficient": 1.0,
+                "ambient_coefficient": 1.0,
+                "reflection_coefficient": 0,
+                "transmission_coefficient": 1.5,
+                "rugosity_coefficient": 100.0
+            },
+            "radius": 1.0,
+            "center": {
+                "py/object": "src.components.point.Point",
+                "x": 1.0,
+                "y": 0.0,
+                "z": -2.0
+            }
+        },
+        {
+            "py/object": "src.components.objects_in_space.Sphere",
+            "material": {
+                "py/object": "src.components.material.Material",
+                "color": {
+                    "py/object": "src.components.color.Color",
+                    "x": 0.0,
+                    "y": 0.0,
+                    "z": 1.0
+                },
+                "diffusion_coefficient": 1.0,
+                "specular_coefficient": 1.0,
+                "ambient_coefficient": 1.0,
+                "reflection_coefficient": 0,
+                "transmission_coefficient": 0,
+                "rugosity_coefficient": 500.0
+            },
+            "radius": 1.0,
+            "center": {
+                "py/object": "src.components.point.Point",
+                "x": 1.0,
+                "y": 0.0,
+                "z": 2.0
+            }
+        },
+        {
+            "py/object": "src.components.objects_in_space.Plane",
+            "material": {
+                "py/object": "src.components.material.Material",
+                "color": {
+                    "py/object": "src.components.color.Color",
+                    "x": 0.6171399351811017,
+                    "y": 0.7868534173559046,
+                    "z": 0.0
+                },
+                "diffusion_coefficient": 1.0,
+                "specular_coefficient": 1.0,
+                "ambient_coefficient": 1.0,
+                "reflection_coefficient": 0.5,
+                "transmission_coefficient": 1,
+                "rugosity_coefficient": 1000.0
+            },
+            "normal": {
+                "py/object": "src.components.vector.Vector",
+                "x": 0.0,
+                "y": 1.0,
+                "z": 0.0
+            },
+            "point": {
+                "py/object": "src.components.point.Point",
+                "x": 0.0,
+                "y": -1.0,
+                "z": 0.0
+            }
+        }
+    ],
+    "lights": [
+        {
+            "py/object": "src.components.light.Light",
+            "position": {
+                "py/object": "src.components.point.Point",
+                "x": 1.0,
+                "y": 4.0,
+                "z": -1.0
+            },
+            "color": {
+                "py/object": "src.components.color.Color",
+                "x": 51,
+                "y": 51,
+                "z": 51
+            }
+        },
+        {
+            "py/object": "src.components.light.Light",
+            "position": {
+                "py/object": "src.components.point.Point",
+                "x": 5.0,
+                "y": 4.0,
+                "z": -1.0
+            },
+            "color": {
+                "py/object": "src.components.color.Color",
+                "x": 153,
+                "y": 153,
+                "z": 153
+            }
+        },
+        {
+            "py/object": "src.components.light.Light",
+            "position": {
+                "py/object": "src.components.point.Point",
+                "x": -3.0,
+                "y": 1.0,
+                "z": -2.0
+            },
+            "color": {
+                "py/object": "src.components.color.Color",
+                "x": 153,
+                "y": 153,
+                "z": 153
+            }
+        }
+    ],
+    "ambient_color": {
+        "py/object": "src.components.color.Color",
+        "x": 51,
+        "y": 51,
+        "z": 51
+    },
+    "background_color": {
+        "py/object": "src.components.color.Color",
+        "x": 0,
+        "y": 0,
+        "z": 0
+    }
+}
