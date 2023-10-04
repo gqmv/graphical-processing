@@ -129,3 +129,7 @@ class Vector(Transformable):
             self.z * other.x - self.x * other.z,
             self.x * other.y - self.y * other.x,
         )
+
+    def reflect_vec(self, normal: Vector) -> Vector:
+        """Returns a reflected vector"""
+        return self - 2 * self.dot_product(normal) * normal

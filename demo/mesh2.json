@@ -38,7 +38,7 @@
                 "diffusion_coefficient": 0.8,
                 "specular_coefficient": 0.8,
                 "ambient_coefficient": 0.4,
-                "reflection_coefficient": 0,
+                "reflection_coefficient": 0.0,
                 "transmission_coefficient": 0,
                 "rugosity_coefficient": 500.0
             },

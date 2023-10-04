@@ -11,3 +11,7 @@ class Ray:
 
     def __repr__(self) -> str:
         return f"Ray(Origin:{self.origin}, Direction:{self.direction})"
+
+    def reflect(self, normal: Vector) -> "Ray":
+        """Returns a reflected ray"""
+        return Ray(self.origin, self.direction.reflect_vec(normal))

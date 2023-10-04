@@ -1,3 +1,4 @@
+from math import sqrt
 from multiprocessing import Pool
 
 from src.components.color import Color
@@ -39,14 +40,22 @@ def find_nearest_intersection(
 
 
 def color_at(
-    object_hit: Object, hit_position: Point, normal_at_position: Vector, scene: Scene
+    object_hit: Object,
+    hit_position: Point,
+    normal_at_position: Vector,
+    scene: Scene,
+    spectator_position: Point | None = None,
 ) -> Color:
     """Return the color at the given hit position, according to Phong shading."""
+    spectator_position = (
+        spectator_position if spectator_position else scene.camera.position
+    )
+
     # Ambient
     color = object_hit.material.get_ambient_component(scene_color=scene.ambient_color)
     for light in scene.lights:
         light_ray = Ray(hit_position, light.position - hit_position)
-        distance_hit, _, obj = find_nearest_intersection(scene, light_ray)
+        _, _, obj = find_nearest_intersection(scene, light_ray)
 
         if obj is not None and obj != object_hit:
             continue
@@ -63,39 +72,98 @@ def color_at(
             light=light,
             hit_position=hit_position,
             normal_at_position=normal_at_position,
-            spectator_position=scene.camera.position,  # TODO: When reccursive ray-tracing is implemented, the spectator will change.
+            spectator_position=spectator_position,  # TODO: When reccursive ray-tracing is implemented, the spectator will change.
         )
 
     return color * object_hit.material.color
 
 
-def trace_ray(ray: Ray, scene: Scene) -> Color:
-    """Trace a ray and return the color of the first object hit."""
-    closest_obj = None
-    closest_obj_distance = float("inf")
-    closest_obj_normal = None
-    for obj in scene.objects:
-        intersection_ditance, normal_at_position = obj.find_intersection(ray)
-
-        if (
-            intersection_ditance is not None
-            and intersection_ditance < closest_obj_distance
-        ):
-            closest_obj = obj
-            closest_obj_distance = intersection_ditance
-            closest_obj_normal = normal_at_position
+def trace_ray(ray: Ray, scene: Scene, depth: int = 0) -> Color:
+    """Trace a ray and return the color that should be displayed, according to Phong shading."""
+    (
+        intersection_point,
+        intersection_normal,
+        intersected_obj,
+    ) = find_nearest_intersection(scene, ray)
 
     if (
-        closest_obj is None or closest_obj_normal is None
-    ):  # checking closest_obj_normal is redundant, but it's here for clarity
+        intersected_obj is None
+        or intersection_normal is None
+        or intersection_point is None
+    ):  # Checking all three is surely redundant, but it's done for clarity and for Mypy to be happy.
         return scene.background_color
 
-    return color_at(
-        object_hit=closest_obj,
-        hit_position=ray.origin + ray.direction * closest_obj_distance,
-        normal_at_position=closest_obj_normal,
+    color = Color(0, 0, 0)
+
+    color += color_at(
+        object_hit=intersected_obj,
+        hit_position=intersection_point,
+        normal_at_position=intersection_normal,
         scene=scene,
+        spectator_position=ray.origin,
     )
+
+    MAX_DEPTH = 5
+    if depth < MAX_DEPTH:
+        material = intersected_obj.material
+        normal = intersection_normal
+        omega = -ray.direction
+        relative_transmission_coeff = material.transmission_coefficient
+
+        # If the ray is inside the object, the normal should be flipped.
+        if normal.dot_product(omega) < 0:
+            normal = -normal
+
+            # If the ray is inside the object, the transmission coefficient should be inverted.
+            relative_transmission_coeff = (
+                0
+                if relative_transmission_coeff == 0
+                else 1 / relative_transmission_coeff
+            )
+
+        # Reflection
+        if material.reflection_coefficient > 0:
+            reflected_ray_pos = intersection_point + (normal * 0.01)
+            reflected_ray_dir = ray.direction.reflect_vec(normal)
+            
+            reflected_ray = Ray(reflected_ray_pos, reflected_ray_dir)
+
+            color += (
+                trace_ray(reflected_ray, scene, depth + 1)
+                * material.reflection_coefficient
+            )
+
+        # Refraction / Transmission
+        if material.transmission_coefficient > 0:
+            delta = 1 - (1 / relative_transmission_coeff**2) * (
+                1 - normal.dot_product(omega) ** 2
+            )
+
+            # If delta is positive, the ray is refracted.
+            if delta >= 0:
+                inverse_transmission_coeff = 1 / relative_transmission_coeff
+
+                refracted_ray_dir = inverse_transmission_coeff * (
+                    ray.direction - normal.dot_product(ray.direction) * normal
+                ) - normal * sqrt(delta)
+                reflected_ray_pos = intersection_point + (-normal * 0.01)
+                refracted_ray = Ray(reflected_ray_pos, refracted_ray_dir)
+
+                color += (
+                    trace_ray(refracted_ray, scene, depth + 1)
+                    * material.transmission_coefficient
+                )
+            # If delta is negative, the ray is reflected. (Total internal reflection)
+            else:
+                reflected_ray_dir = ray.direction.reflect_vec(normal)
+                reflected_ray_pos = intersection_point + (normal * 0.01)
+                reflected_ray = Ray(reflected_ray_pos, reflected_ray_dir)
+                color += (
+                    trace_ray(reflected_ray, scene, depth + 1)
+                    * material.transmission_coefficient
+                )
+
+    return color
 
 
 def _render_ray(x: int, y: int, scene: Scene):

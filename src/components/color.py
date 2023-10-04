@@ -16,6 +16,13 @@ class Color(Vector):
     def b(self):
         return self.z
 
+    def __add__(self, other):
+        return Color(
+            min(self.r + other.r, 255),
+            min(self.g + other.g, 255),
+            min(self.b + other.b, 255),
+        )
+
     def as_rgb(self) -> tuple[int, int, int]:
         """Returns the color as a tuple of ints"""
         return (int(self.r), int(self.g), int(self.b))
