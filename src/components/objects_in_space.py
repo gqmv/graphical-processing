@@ -221,15 +221,77 @@ class TriangleMesh(Object):
 class BezierSurface(Object):
     """Class for bezier surface objects."""
 
-    def __init__(self, material: Material, points: list[list[Point]]):
+    def __init__(self, material: Material, points: list[list[Point]], K1: int, K2: int): # é uma lista de listas de pontos que formam, cada uma, uma curva de bezier
         super().__init__(material)
         self.points = points
 
+        # Primeiro passo: Criar a matriz intermediaria com as iterações do deCasteljau com K1
+        new_matriz_k1 = []
+        for lista_pontos in points:
+            new_pontos = []
+            for i in range(K1):
+                new_ponto = self.deCasteljau(lista_pontos, i/(K1 - 1))
+                new_pontos.append(new_ponto)
+            new_matriz_k1.append(new_pontos)
+
+        # Segunda matriz
+        final_matriz_k2 = []
+        for j in range(K1): # Posição das colunas
+            coluna = [linha[j] for linha in new_matriz_k1]
+            new_pontos = []
+            for i in range(K2):
+                new_ponto = self.deCasteljau(coluna, i/(K2 - 1))
+                new_pontos.append(new_ponto)
+            final_matriz_k2.append(new_pontos)
+            # A matriz vai ficar transposta mas nao importa para a malha de trigulos
+
+        lista_triangulos = []
+        for i in range(K1-1):
+            for j in range(K2-1):
+                vector_11 = final_matriz_k2[i][j+1] - final_matriz_k2[i][j]
+                vector_12 = final_matriz_k2[i+1][j] - final_matriz_k2[i][j]
+                normal1 = vector_12.cross_product(vector_11).normalized()
+                T1 = Triangle(self.material, (final_matriz_k2[i][j+1], final_matriz_k2[i][j], final_matriz_k2[i+1][j]), normal1)
+
+                vector_21 = final_matriz_k2[i][j+1] - final_matriz_k2[i+1][j+1]
+                vector_22 = final_matriz_k2[i+1][j] - final_matriz_k2[i+1][j+1]
+                normal2 = vector_21.cross_product(vector_22).normalized()
+                T2 = Triangle(self.material, (final_matriz_k2[i][j+1], final_matriz_k2[i+1][j+1], final_matriz_k2[i+1][j]), normal2)
+
+                lista_triangulos.append(T1)
+
+                lista_triangulos.append(T2)
+
+        self.malha = TriangleMesh(material, lista_triangulos)
+        print(len(lista_triangulos))
+
+           
+    def interpolate(self, pointA: Point, pointB: Point, t: float):
+        mult1 = pointA.__mul__(t) 
+        mult2 = pointB.__mul__(1-t)
+        return mult1.__add__(mult2)
+    
+    def deCasteljau(self, points: list[Point], t):
+        grade = len(points) - 1
+        
+        if grade == 1:
+            return self.interpolate(points[0], points[1], t)
+        
+        newPoints = []
+        for i in range(grade):
+            pointA = points[i]
+            pointB = points[i + 1]
+            newPoint = self.interpolate(pointA, pointB, t)
+            
+            newPoints.append(newPoint)
+        
+        return self.deCasteljau(newPoints, t)
+
     def get_normal_at_point(self, point: Point) -> Vector:
-        pass
+        return self.malha.get_normal_at_point(point)
 
     def find_intersection(self, ray: Ray) -> tuple[float, Vector] | tuple[None, None]:
-        pass
+        return self.malha.find_intersection(ray)
 
     def _transform(self, matrix: list[list[float]]) -> Self:
-        pass
+        return self.malha._transform(matrix)
